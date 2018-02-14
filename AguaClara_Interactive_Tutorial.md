@@ -110,9 +110,9 @@ Image with Height and Width Adjusted:
 
 1. Make an images folder in your personal repository, and import an image of your hometown or pet from that folder. Do it unformatted using the image URL and the relative file path method, then do it again but instead change the height and width of your image:
 
-![My_pet](/Users/cheertsang/github/Personal/Images/Birb.jpg)
+![My_pet](./Images/Birb.jpg)
 
-<img src="/Users/cheertsang/github/Personal/Images/Birb.jpg" height=200 width=100>
+<img src="https://github.com/ct542/Personal/blob/master/Images/Birb.jpg?raw=true" height=200 width=100>
 
 
 
