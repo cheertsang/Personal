@@ -120,7 +120,7 @@ Image with Height and Width Adjusted:
 
 
 ## Links
-You can also link text to a webpage. For example, I've inserted a link [here](http://aguaclara.cee.cornell.edu) to the AguaClara website.
+You can also link text to a webpage. For example, I've inserted a link [here](http://aguaclara.cee.cornell.edu) to the AguaClara website. 
 
 To insert a link, all you have to do is enclose your linked text in `[]` followed immediately by `()` with no space between them. Your URL goes in the parentheses. It should look like this `[Text_to_be_Linked](URL)`.
 
