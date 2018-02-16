@@ -122,7 +122,7 @@ Image with Height and Width Adjusted:
 ## Links
 You can also link text to a webpage. For example, I've inserted a link [here](http://aguaclara.cee.cornell.edu) to the AguaClara website.
 
-To insert a link, all you have to do is enclose your linked text in `[]` followed immediately by `()` with no space between them. Your URL goes in the parentheses. It should look like this `[Text_to_be_Linked](URL)`. 
+To insert a link, all you have to do is enclose your linked text in `[]` followed immediately by `()` with no space between them. Your URL goes in the parentheses. It should look like this `[Text_to_be_Linked](URL)`.
 
 1. Below, write a sentence describing your major, and insert a link to your major's department website.
 
@@ -184,9 +184,7 @@ For larger code blocks where you report multiple lines of code, you always start
 2. Now write a block of Python code for that same print statement:
 
 ```python
-if n > 10:
-  print 'yes'
-print 'no'
+print 'Hello World'
 ```
 
 
@@ -256,7 +254,7 @@ def add_i(x):
   x = 0
   for i in range(0,20):
     x += i
-    #print(x)
+    print(x)
 
   print('Final value is ' + str(x))
 
@@ -266,6 +264,7 @@ add_i(6)
 3. Using the NumPy package, calculate the value of sin(4), and use the sigfig function from the utility module in aide_design to get your answer to 3 sig-figs. *(Hint: You will need to import these packages. Remember how to do that?)*
 ```python
 from aide_design.play import*
+
 x = np.sin(4)
 rounded_x = np.around(x, decimals=3)
 print(rounded_x)
@@ -362,7 +361,7 @@ In this section you and your team can practice using Teletype together.
 
 1. Create a portal for your team members to join. Have them write you words of  encouragement in the space below, and be sure they sign their name next to their encouragements.
 
-
+Cheerrrr u da bomb.com - Canaan Delgado
 My favorite Subteam Lead <3 -Yeonjin Yun
 
 
