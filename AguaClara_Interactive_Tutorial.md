@@ -362,6 +362,7 @@ In this section you and your team can practice using Teletype together.
 1. Create a portal for your team members to join. Have them write you words of  encouragement in the space below, and be sure they sign their name next to their encouragements.
 
 Cheerrrr u da bomb.com - Canaan Delgado
+
 My favorite Subteam Lead <3 -Yeonjin Yun
 
 
