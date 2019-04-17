@@ -1,6 +1,6 @@
 # Project Title
 
-## Team: La Mera Chimba
+**Team: La Mera Chimba**
 - Cheer Tsang (ct542@cornell.edu)
 - Kevin Sarmiento (ks2255@cornell.edu)
 - Giancarlo Pacenza (gap75@cornell.edu)
