@@ -1,4 +1,4 @@
-#Project Title
+# Project Title
 
 ## Team: La Mera Chimba
 - Cheer Tsang (ct542@cornell.edu)
@@ -18,6 +18,12 @@ Go metric.
 
 Describe your general plan for solving the problem. Create as much detail about how the steps you will need to take to solve the problem as you can. Taking the time to think about the detailed steps will help you divide up tasks and work efficiently.
 
+Steps:
+1. Flow rate calculations
+2. Design specifications: velocity gradient, baffle spacing/dimensions, number of expansions needed, optimal ratio of height and spacing, total amount of material (surface area)
+2. Cost analysis
+3. Fabrication details
+
 ### Constraints
 
 Include list of important constraints, trade offs, perceived operator/user specifications, major design alternatives, and comparison of the major design alternatives according to the various constraints that you have identified.
@@ -28,11 +34,14 @@ Explain ALL calculations step by step including why you are doing the calculatio
 
 ### Trade Offs
 
+fabrication difficulties
+
 ### Operator/User Specifications
+
 
 ### Major Design Alternatives
 
-
+pipe flocculator vs plates
 
 ## References
 
