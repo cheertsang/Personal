@@ -22,7 +22,7 @@ The capital cost of a traditional AguaClara plant is fixed at roughly \$100,000,
 AguaClara would like to expand its efforts in serving a range of smaller communities. Thus, we would like to design a range of designs that accommodate for flow rates of 1 to 5 L/s ("plantitas"). In particular, we will be focusing on the design of the sedimentation tank. The current design of the PF300 sedimentation tank consists of two sections of a cylindrical corrugated HDPE pipe welded together at a 30 degree angle:
 
 <p align="center">
-  <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank.JPG?raw=True">
+  <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank.JPG?raw=True" height=300>
 </p>
 <p align="center">
 
