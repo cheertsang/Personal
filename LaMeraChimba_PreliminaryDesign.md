@@ -17,7 +17,7 @@ AguaClara would like to expand its efforts in serving a range of smaller communi
 </p>
 <p align="center">
 
-**Figure 1:** The fully fabricated PF300 sedimentation tank ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)).
+**Figure 1:** The fully fabricated PF300 plant. The sedimentation tank is housed in the teal HDPE corrugated pipe ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)).
 
 Like the traditional AguaClara plants, the internal structure of the sedimentation tank consists of sedimentation plates, a floc hopper, an inlet manifold, outlet manifold, base plates, and a jet reverser (Figure 2).
 
@@ -61,19 +61,19 @@ Additionally, we have to consider the fact that placing plate settlers at an ang
 
 ### Operator/User Specifications
 
-An important consideration is the ease of use for the plant operator. The only requirement is
+An important consideration is the ease of use for the plant operator. The new sedimentation tank will be operated in the same way as the current design, so the new design will not require any additional user specifications.
 
 ### Major Design Alternatives
 
-Measure of improvement
-  - material amount per liter per second
-  - area occupied by plant per liter per second
-  - difficulty of construction
+A comparison could be made between using the following design options:
+  1. Using one larger capacity plantita (new design)
+  2. Using multiple plantitas in conjunction (current design)
+
+In order to evaluate which design would be more practical, the following indicators can be analyzed:
+  - Amount of material required per liter per second
+  - Area occupied by plant per liter per second
+  - Difficulty of construction
   - Cost per liter per second
-
-Table Comparing Alternatives
-
-Evaluation of Most viable Alternatives
 
 ## Methods
 
@@ -90,7 +90,8 @@ from aguaclara.core.units import unit_registry as u
 import aguaclara.core.utility as ut
 import numpy as np
 import matplotlib.pyplot as plt
-import aguaclara.design.sed_tank as st
+#import aguaclara.design.sed_tank as st
+#there is an error in importing the sed tank package
 
 ```
 
@@ -129,6 +130,7 @@ print('The plant capacity is ' + str(Q))
 **The plant capacity is 4.104 liter / second**
 
 ### Inlet manifold and diffuser specifications
+
 In order to begin to determine the size of the diffusers and the manifolds we first identified the relevant constraints for designing these components. First, the maximum head loss from the diffuser has been set to be 1 cm. This is due to the fact that there is a small energy requirement to keep the floc blanket suspended. Using this we can determine the maximum velocity at which water will leave the diffusers. We use the following head loss equation:
 
 $$H_{Lmax}= \frac{V_{max}^2}{2g}$$
@@ -142,12 +144,58 @@ where the $V_{sed up}$ describes the upflow velocity in the active floc blanket 
 $$\frac{Total Area}{Diameter} = Effective Width$$
 $$W_{effective}= \frac{\pi D}{4}$$
 
+Now we can calculate the minimum diffuser width that we can use. That is described by using the following equation:
+$$W_{min}=\frac{V_{sed up}W_{effective}}{V_{diffmin}}$$
+
+
+
 ```python
 max_HL = 1*u.centimeter
 max_diffuser_vel = ((2*con.GRAVITY*max_HL)**(0.5)).to(u.m/u.s)
-W_effective = (np.pi * diam) / 4
+W_effective_sedtank = (np.pi * diam) / 4
+print('The effective sed tank width is ' + str(W_effective))
 
-print('The effective diffuser width is ' + str(W_effective))
+W_min_diffuser = ((vup * W_effective_sedtank)/max_diffuser_vel).to(u.millimeter)
+print ('The minimum diffuser width is ' +str(W_min_diffuser))
+
+max = (0.5*u.inches).to(u.millimeter)
+interval = (1*u.inches/8).to(u.millimeter)
+mold_sizes = np.arange(0, max*(1/u.millimeter) , interval*(1/u.millimeter))
+
+print('The range of available mold sizes available to make the diffusers in Honduras are as follows in units of mm '+ str(mold_sizes))
+
+print ('Based on the required minimum width and the width of the diffuser molds available, we will be using a diffuser with a width of 6.35 mm')
+
+diffuser_ND = 1*u.inches
+diffuser_SDR = 26
+diffuser_ID = pipes.ID_SDR(diffuser_ND, diffuser_SDR)
+diffuser_OD = pipes.OD(diffuser_ND)
+diffuser_inner_circumferance = diffuser_ID * np.pi
+diffuser_thickness = diffuser_OD - diffuser_ID
+
+# after heating and molding the dimensions will change as follows
+stretch_ratio = 1/1.2
+diffuser_thickness_stretched = diffuser_thickness * stretch_ratio
+diffuser_inner_circ_stretch = diffuser_inner_circumferance / stretch_ratio
+
+# If we assume that the corners of our diffuser are perfect squares then we can determine its length and width after molding.
+
+w_diffuser_inside = 6.35*u.millimeter
+w_diffuser_outside = w_diffuser_inside + 2*diffuser_thickness_stretched
+interior_length_diffuser = ((diffuser_inner_circ_stretch - 2*w_diffuser)).to(u.centimeter)
+exterior_length_diffuser = (interior_length_diffuser + 2*diffuser_thickness_stretched).to(u.centimeter)
+
+print ('The diffusers have an inner width of '+str(w_diffuser_inside))
+print ('The diffusers have an outer width of '+str(w_diffuser_outside ))
+print('The diffusers have an inner length of '+str(interior_length_diffuser))
+print('The diffusers have an outer length of '+str(exterior_length_diffuser))
+
+# To determine the number of diffusers that can fit into the sedimentation tank we need to take the diameter of the tank and divide it by the exterior length of one diffuser. We will also take into account that there will be some small spacing between the diffusers during assembly.
+
+spacing_btw_diffusers = 2*u.millimeter
+length_per_diffuser = spacing_btw_diffusers*2 + exterior_length_diffuser
+num_diffusers = round(diam/length_per_diffuser.to(u.meter))
+print ('The total number of diffusers that fit into the sedimentation tank of this plant is '+str(num_diffusers))
 
 ```
 
@@ -163,7 +211,7 @@ The next dimension of the plate settlers we care about is the plate angle. In de
 
 Now that we have the spacing between plates and the angle the plates will be set at, we can calculate what the length of the plate settlers should be using the following equation:
 
-$$\frac{S*((v_{up}/v_c)-1)+(T*v_{up})/v_c}{cos(\alpha)sin(\alpha)}$$
+$$L = \frac{S*((v_{up}/v_c)-1)+(T*v_{up})/v_c}{cos(\alpha)sin(\alpha)}$$
 
 where:
 - $S$ is spacing between plates
@@ -204,18 +252,59 @@ B = S+T
 
 n = np.floor((L*np.tan(alpha))/B + 1)
 
-print('The maximum number of plate settlers is ' + str(n))
+print('The maximum number of plate settlers per module is ' + str(n))
 ```
 
 **The maximum number of plate settlers is 13 dimensionless**
 
 This gives us the number of plates per standard module in a standard AguaClara sedimentation tank. Given the module has a width of 40 inches, in order to adapt this calculation to our design, we will say that this gives the number of plates per 40 inches of width.
 
+### Bottom Geometry and Jet Reverser
+
+The bottom geometry and jet reverser are based on the current design. The base plates of the sedimentation tank are placed at a 60 degree angle from each other ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)).
+
+The jet reverser is fabricated from a PVC pipe cut in half sectionally. The diameter of this half-pipe is 7.5 cm ([Weber-Shirk, 2019](https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/Sedimentation.pptx)).
+
+specifications of ellipses
+length of jet reverser = diameter of tank
+energy dissipation rate for flow leaving jet reverser
+
+The calculations below are adapted from [Sedimentation Design Challenge](https://aguaclara.github.io/Textbook/Sedimentation/Sed_Design_Solution.html):
+
+```python
+#Calculate the thickness of the jet when it leaves the diffuser. B_diff = S_diff
+
+W_jet_reversed = W_sed * V_sed_up / V_diffuser
+
+#Calculate the maximum energy dissipation rate
+
+EDR_inlet_jet = Pi_jet_plane *((( V_diffuser)**3)
+                        / W_jet_reversed).to(u.mW / u.kg)
+
+
+print('The energy dissipation rate for inlet jet is', EDR_inlet_jet)
+```
+
+
+### Design Comparison
+
+#### Amount of Material Required
+
+
+#### Area Occupied by Plant
+
+
+#### Cost Analysis
+
+Table 1:
 
 
 
+## Proposed Solution Techniques
 
-### Proposed Solution Techniques
+Table Comparing Alternatives
+
+Evaluation of Most viable Alternatives
 
 ### Analysis
 Explain ALL calculations step by step including why you are doing the calculation.
@@ -228,21 +317,18 @@ Go metric.
 
 The Markdown worksheet should include a method to determine any major design constraints, proposed solution technique(s), analysis, sketches, preliminary design, with extensive documentation. Any equations that you present must be well documented with explanation of how you derived those equations and how you are using those equations.
 
-
-
-
-
-
-
 ## References
 
 Herrera, D., Hua, Y., Kim, S., King, S., Yang, F. (Fall 2016). Pre-Fabrication 1 L/s, Fall 2016. Retrieved from https://www.overleaf.com/read/cnkbrqcsxxfn.
 
 Buhl, K., DeVoe, C., Kruskopf, M., Yang, F. (Spring 2016). Prefab 1 L/s, Spring 2016. Retrieved from https://confluence.cornell.edu/pages/viewpage.action?pageId=333352626&preview=/333352626/335435860/Prefab_Final_Report.pdf.
 
-Weber-Shirk, M., Juan, G., Clare, O., William, P., Leonard, L., Yingda, D., & Zoe, M. (2018). AguaClara Textbook. AguaClara Cornell. Retrieved from https://aguaclara.github.io/Textbook/index.htm
+Weber-Shirk, M., Juan, G., Clare, O., William, P., Leonard, L., Yingda, D., & Zoe, M. (2018). AguaClara Textbook. AguaClara Cornell. Retrieved from https://aguaclara.github.io/Textbook/index.htm.
 
 Weber-Shirk, M. (2019, February 7). AguaClara Ecosystem.
-https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/AguaClara%20Ecosystem.pptx
+https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/AguaClara%20Ecosystem.pptx.
 
-2710 Gallon Plastic Water Storage Tank. (n.d.). Retrieved April 19, 2019, from https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank
+Weber-Shirk, M. (2019, March 12). Sedimentation.
+https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/Sedimentation.pptx.
+
+2710 Gallon Plastic Water Storage Tank. (n.d.). Retrieved April 19, 2019, from https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank.
