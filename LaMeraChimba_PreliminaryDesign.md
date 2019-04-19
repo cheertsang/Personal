@@ -129,7 +129,6 @@ print('The plant capacity is ' + str(Q))
 **The plant capacity is 4.104 liter / second**
 
 ### Inlet manifold and diffuser specifications
-
 In order to begin to determine the size of the diffusers and the manifolds we first identified the relevant constraints for designing these components. First, the maximum head loss from the diffuser has been set to be 1 cm. This is due to the fact that there is a small energy requirement to keep the floc blanket suspended. Using this we can determine the maximum velocity at which water will leave the diffusers. We use the following head loss equation:
 
 $$H_{Lmax}= \frac{V_{max}^2}{2g}$$
@@ -137,9 +136,18 @@ $$H_{Lmax}= \frac{V_{max}^2}{2g}$$
 from this we can solve for the maximum velocity
 $$V_{max}=\sqrt{2gH_{Lmax}}$$
 
+This is an important parameter because it helps us determine the minimum diffuser width that we need to have for our plant. This is determined by the following equation:
+$$W_{diff max} = \frac{V_{sed up}}{V_{diff max}}W_{sed} $$
+where the $V_{sed up}$ describes the upflow velocity in the active floc blanket region of the sedimentation tank, $V_{diffmax}$ is the maximum diffuser velocity and $W_sed$ is the width of the sedimentation tank. We already have the upflow velocity which is 1 $\frac{mm}{s}$ which is the required velocity to keep the floc blanket in suspension. However, finding the width of the sed tank in a circular tank is not as straightforward as the rectangular tanks in larger AguaClara plants. To do this we found an effective tank width by taking into account the floorplan area of the plant and the diameter.
+$$\frac{Total Area}{Diameter} = Effective Width$$
+$$W_{effective}= \frac{\pi D}{4}$$
+
 ```python
 max_HL = 1*u.centimeter
+max_diffuser_vel = ((2*con.GRAVITY*max_HL)**(0.5)).to(u.m/u.s)
+W_effective = (np.pi * diam) / 4
 
+print('The effective diffuser width is ' + str(W_effective))
 
 ```
 
