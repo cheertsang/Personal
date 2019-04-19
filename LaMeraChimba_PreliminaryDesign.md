@@ -22,15 +22,25 @@ The capital cost of a traditional AguaClara plant is fixed at roughly \$100,000,
 AguaClara would like to expand its efforts in serving a range of smaller communities. Thus, we would like to design a range of designs that accommodate for flow rates of 1 to 5 L/s ("plantitas"). In particular, we will be focusing on the design of the sedimentation tank. The current design of the PF300 sedimentation tank consists of two sections of a cylindrical corrugated HDPE pipe welded together at a 30 degree angle:
 
 <p align="center">
-  <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank.JPG?raw=True" height=300>
+  <img src="https://github.com/cheertsang/Personal/blob/master/IMG_3748.JPG?raw=True" height=500>
 </p>
 <p align="center">
 
-**Figure 1:** The PF300 sedimentation tank...
+**Figure 1:** The fully fabricated PF300 sedimentation tank (Herrera et. al, 2016).
 
 The internal structure of the sedimentation tank consists of
 
 As the design capacity of
+
+<p align="center">
+  <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank_schematic.png?raw=True" height=300>
+</p>
+<p align="center">
+
+
+```python
+
+```
 
 State the current Design
 - background info on current 1 LPS sed tank design
@@ -44,6 +54,12 @@ How would a new design solve these problems?
 
 ## General Plan/Steps
 
+1. Bottom geometry design
+2. Floc weir placement
+3. Plate settlers (dimensions, spacing)
+4. Velocity of jet reverser
+5. Diameter of half-pipe
+5. One versus two sloped bottoms
 
 ### Important Constraints
 Include list of important constraints, trade offs, perceived operator/user specifications, major design alternatives, and comparison of the major design alternatives according to the various constraints that you have identified. Create a table comparing alternatives and your evaluation of which alternatives are most viable. See the comparison of net velocities and filtration performance of SRSF, RSF, and multistage filters.
@@ -89,6 +105,8 @@ The Markdown worksheet should include a method to determine any major design con
 Include a bibliography and citations to acknowledge use of work by others.
 
 Look ahead to the report requirements and begin working on including those sections. Spell check before submitting and proofread the entire report.
+
+Herrera, D., Hua, Y., Kim, S., King, S., Yang, F. (Fall 2016). Pre-Fabrication 1 L/s, Fall 2016. Retrieved from https://www.overleaf.com/read/cnkbrqcsxxfn.
 
 Buhl, K., DeVoe, C., Kruskopf, M., Yang, F. (Spring 2016). Prefab 1 L/s, Spring 2016. Retrieved from https://confluence.cornell.edu/pages/viewpage.action?pageId=333352626&preview=/333352626/335435860/Prefab_Final_Report.pdf.
 
