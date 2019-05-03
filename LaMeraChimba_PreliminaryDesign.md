@@ -32,22 +32,18 @@ Like the traditional AguaClara plants, the internal structure of the sedimentati
 **Figure 2:** Schematic of the internal structure of a PF300 sedimentation tank ([Buhl et. al, 2016](https://confluence.cornell.edu/pages/viewpage.action?pageId=333352626&preview=/333352626/335435860/Prefab_Final_Report.pdf)).
 
 
-
-
-One of the issues with the current design is that welding the two sections of corrugated HDPE pipe together is labor-intensive and difficult to line up precisely. We want to explore altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections of pipe. This would allow us to increase the capacity of the PF300 and make it easier to fabricate.
+In the current PF300 plant design there are two separate pieces of corrugated HDPE pipe that needs to be welded together at a $30\degree$ angle, refer to figure 2. This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. However, one of the issues with this design is that welding the two sections of corrugated HDPE pipe together is labor-intensive and difficult to line up precisely. We want to explore altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections of pipe. This would allow us to increase the capacity of the PF300 and make it easier to fabricate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
 
 [Why did the first version of PF300 have a sloped upper section? ]:#
 
-Because of this we are looking to build a sedimentation tank out of this premade Rotoplast.
+Because of this we are looking to build a sedimentation tank out of this premade Rotoplast tank.
 
 <p align="center">
   <img src="https://www.plastic-mart.com/db_images/pm/enduraplas_2500_gallon_water_tank.jpg" height=500>
 </p>
 <p align="center">
 
-**Figure 3:** a 1500 liter Rotoplast tank that we will be using as a sedimentation tank.
-
-[Note that below you are using a much larger tank.]:#
+**Figure 3:** The 10,259 liter Rotoplast tank that we will be using as a sedimentation tank has a diameter of 90      
 
 ## General Plan/Steps
 
@@ -64,13 +60,13 @@ As we develop the new design, there are important constraints to keep in mind - 
 
   1. **Upflow Velocity** - The main factor we need to keep constant in our sedimentation tank is the upflow velocity. This is because much of the efficacy of the sedimentation tank lies in the ability to suspend flocs. This in turn comes from the upflow velocity. As we modify parameter in the sedimentation tank, we are constrained by the need to maintain an upflow velocity of 1 mm/s. As shown in the AguaClara design, this is a sufficient upflow velocity for ensuring floc suspension. Therefore, we will ensure that our redesigned sedimentation tank maintains the upflow velocity of 1 mm/s.
 
-  2. **Cost** - One of the goals of AguaClara has always been to provide a relatively cheap option. With the modified design, we wish to preserve this goal and ensure that the new design is relatively cheap to manufacture. In particular, we want to ensure that any cost increases are sufficiently justified by overall improvements in the plant. One approach to analyze this (in comparison to the current design) would be to establish a metric of cost per L/s.
+  2. **Cost** - One of the goals of AguaClara has always been to provide a relatively cheap option for providing safe drinking water. With the modified design, we wish to preserve this goal and ensure that the new design is relatively cheap to manufacture. In particular, we want to ensure that any cost increases are sufficiently justified by overall improvements in the plant. One approach to analyze this (in comparison to the current design) would be to establish a metric of cost per L/s.
 
   3. **Material/Space** - A slightly more subjective constraint is our use of space. In addition to being cost effective, we want to make sure the plant is space effective. This involves considerations of how much material we are using and what ground surface area the plant is occupying. Part of the application of this constraint would be the subjective evaluation of the space use; that is, intuitively speaking, does the plant seem to warrant the space it is occupying given the benefit it is providing? A more concrete application would be to measure the area occupied by the plant per L/s. This way, we can objectively measure whether or not an increase in space consumed is leading to a proportional increase in capacity.
 
 [Right. Space matters because a building enclosure will be required and because land will need to be purchased.]
 
-  4. **Ease of Construction** - One of the main motivations for pursuing a new design was the pursuit of a small plant that is easier to construct. As we concretify [cool word concretificacion???... perhaps use "develop"] the design, we want ot [to... check spelling!] be sure that we are not adding unnecessary complications. This constraint will be evaluated more intuitively by making comparisons between the construction process for *hte* PF300 and our redesigned version.
+  4. **Ease of Construction** - One of the main motivations for pursuing a new design was the pursuit of a small plant that is easier to construct. As we develop the design, we want to be sure that we are not adding unnecessary complications. This constraint will be evaluated more intuitively by making comparisons between the construction process for the PF300 and our redesigned version.
 
 ### Trade Offs
 
@@ -178,7 +174,7 @@ $$W_{min}=\frac{V_{sed up}W_{effective}}{V_{diffmin}}$$
 max_HL = 1*u.centimeter
 max_diffuser_vel = ((2*con.GRAVITY*max_HL)**(0.5)).to(u.m/u.s)
 W_effective_sedtank = (np.pi * diam) / 4
-print('The effective sed tank width is ' + str(W_effective))
+print('The effective sed tank width is ' + str(W_effective_sedtank))
 
 W_min_diffuser = ((vup * W_effective_sedtank)/max_diffuser_vel).to(u.millimeter)
 print ('The minimum diffuser width is ' +str(W_min_diffuser))
@@ -299,6 +295,24 @@ The bottom geometry and jet reverser are based on the current design. The base p
 $$Minor Axis = Diameter $$
 $$\theta = 60 \degree$$
 $$Major Axis = \frac{Diameter}{\cos \theta} $$
+$$ Focus = \sqrt{\frac{Major^2}{4}- \frac{Minor^2}{4}} $$
+
+```python
+minor = diam
+theta = 60*u.deg
+major = diam/np.cos(theta)
+focus = np.sqrt((major**2)/4 - (minor**2)/4)
+
+print('The focus ')
+```
+Since 60 degrees was somewhat arbitrarily chosen as a conservative estimate of the angle required to allow flocs to roll down into the jet reverser, we experimented with using a 50 degree angle for the base plates. To compare these two options, we compared the amount of volume we could save by using a 50 degree angle instead of a 60 degree angle.
+
+The volume of space underneath the base plates is considered "wasted" space because the higher the base plates extend, the less available volume there is for the floc blanket to form. We calculated the amount of space "wasted" for base plates at 50 versus 60 degrees creating [OnShape models](https://cad.onshape.com/documents/83807153abc0891a5e2357b6/w/f49e8a4c6a84ac8d0bfbdd69/e/244a70d6ffc2d840528b962e).  
+
+In addition, the OnShape models were also used to calculate the surface area of the base plates:
+
+
+
 
 The jet reverser is fabricated from a PVC pipe cut in half sectionally. The diameter of this half-pipe is 7.5 cm ([Weber-Shirk, 2019](https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/Sedimentation.pptx)). The length of the half-pipe is equal to the diameter of the sedimentation tank, 2.286 m.
 
