@@ -31,12 +31,14 @@ Like the traditional AguaClara plants, the internal structure of the sedimentati
 
 **Figure 2:** Schematic of the internal structure of a PF300 sedimentation tank ([Buhl et. al, 2016](https://confluence.cornell.edu/pages/viewpage.action?pageId=333352626&preview=/333352626/335435860/Prefab_Final_Report.pdf)).
 
+The specifications of the current PF300 plant design within this report were obtained from the [OnShape model](https://cad.onshape.com/documents/c2d1f86405270e814e117305/w/5a99281e258edb48b9d633f5/e/6bae3d77db5722cca1e4684c) created by AIDE Template.
 
-In the current PF300 plant design there are two separate pieces of corrugated HDPE pipe that needs to be welded together at a $30\degree$ angle, refer to figure 2. This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. However, one of the issues with this design is that welding the two sections of corrugated HDPE pipe together is labor-intensive and difficult to line up precisely. We want to explore altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections of pipe. This would allow us to increase the capacity of the PF300 and make it easier to fabricate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
+
+In the current PF300 plant design there are two separate pieces of corrugated HDPE pipe that needs to be welded together at a $30\degree$ angle (Figure 2). This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. However, one of the issues with this design is that welding the two sections of corrugated HDPE pipe together is labor-intensive and difficult to line up precisely. We want to explore altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections of pipe. This would allow us to increase the capacity of the PF300 and make it easier to fabricate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
 
 [Why did the first version of PF300 have a sloped upper section? ]:#
 
-Because of this we are looking to build a sedimentation tank out of this premade Rotoplast tank.
+Because of this we are looking to build a sedimentation tank out of a pre-made Rotoplast tank (Figure 3).
 
 <p align="center">
   <img src="https://www.plastic-mart.com/db_images/pm/enduraplas_2500_gallon_water_tank.jpg" height=500>
@@ -70,7 +72,7 @@ As we develop the new design, there are important constraints to keep in mind - 
 
 ### Trade Offs
 
-Given that our proposal is an adaptation of a current design, we must think about what we gain in the context of what we lose. Some improvements our proposal is designed to provide are an increased flow rate and an increased ease of construction. The idea is that a straight structure will be much easier to build than the bent structure. Additionally, this structure will be larger, thus *allowign* for an increased flow rate.
+Given that our proposal is an adaptation of a current design, we must think about what we gain in the context of what we lose. Some improvements our proposal is designed to provide are an increased flow rate and an increased ease of construction. The idea is that a straight structure will be much easier to build than the bent structure. Additionally, this structure will be larger, thus allowing for an increased flow rate.
 
 On the other hand, one benefit of the previous structure was that the plate settlers ran parallel to the upper portion of the tube. This eliminated the little triangle of wasted space by the walls of the tank. With our straight-tank design, we are reintroducing those triangles of space. We must consider the cost of reintroducing this space.
 
@@ -203,7 +205,7 @@ diffuser_inner_circ_stretch = diffuser_inner_circumferance / stretch_ratio
 
 w_diffuser_inside = 6.35*u.millimeter
 w_diffuser_outside = w_diffuser_inside + 2*diffuser_thickness_stretched
-interior_length_diffuser = ((diffuser_inner_circ_stretch - 2*w_diffuser)).to(u.centimeter)
+interior_length_diffuser = ((diffuser_inner_circ_stretch - 2*w_diffuser_inside)).to(u.centimeter)
 exterior_length_diffuser = (interior_length_diffuser + 2*diffuser_thickness_stretched).to(u.centimeter)
 
 print ('The diffusers have an inner width of '+str(w_diffuser_inside))
@@ -222,6 +224,14 @@ print ('The total number of diffusers that fit into the sedimentation tank of th
 
 ```
 
+### Honeycomb Settler Specifications
+
+Another big design change we are making is a switch from the standard plate settlers to the honeycomb settlers. Given this major choice, the additional dimensions we must consider are spacing, angle, and length. Based on manufacturing limits of the honeycomb settlers, we already have a predetermined spacing of 3/8". This is determined by the diameter of the holes in the honeycomb.
+
+The next design parameter to consider is the angle of the honeycomb settler. As with plate settlers, we want to make sure we have an angle that allows the flocs to slide down the plates. Current AguaClara plate settlers are designed to sit at 60 degrees. Given that we could not find any explicit rational for this choice and given that it seems to be working well, we decided to use this angle for the honeycomb. Furthermore, as with the plate settlers, there is not a huge advantage in changing this angle to 50 degrees.
+
+Following with AguaClara design choices, we assume an upflow velocity of 1 mm/s and a capture velocity of 0.12 mm/s. Now that we have the spacing between plates and the angle the plates will be set at, we need to calculate the length of the honeycomb settlers. However, this calculation becomes very complicated due to the "lost triangle" issue. In our previously submitted design, we were originally planning to implement plate settlers. However, after some consideration, we decided to implement the honeycomb settlers. Given this new circular architecture, we get a "lost ellipses" which we do not know how to deal with. Before moving forward with the calculation, we want to discuss with Monroe how to deal with this issue.
+
 ### Plate Settler Specifications
 
 The next design parameters we have to consider are the dimensions of the plate settlers. These dimensions boil down to plate spacing, plate angle, plate length, and number of plates. In particular, we want to consider how, if at all, the new dimensions will deviate from the traditional AguaClara plant dimensions. Our plates will use the same thickness as those used by the traditional AguaClara plants (2 mm).
@@ -230,13 +240,10 @@ The first dimension to consider is the spacing between plate settlers. The spaci
 
 Following with the AguaClara design choices, we assume an upflow velocity of 1 mm/s and a capture velocity of 0.12 mm/s. Given these constraints, we know that we require a minimum plate spacing of 2.5 mm to prevent floc rollup. That being said, the AguaClara design opts for a spacing of 2.5 cm. As explained in the text, this is due to the variability in the type of incoming particle. The initial calculations were made for clay-based flocs; in reality, clay-based flocs are not the only flocs that should be expected. This is the reason for the 2.5 cm spacing. Since our own plant faces similar constraints, we will also opt for a spacing of 2.5 cm.
 
-[To be perfectly clear. The 2.5 cm spacing is arbitrary. I pulled it out of the air. I said... Well, 5 cm works. I bet it is conservative. Let's try 2.5 cm. So now we can see that 2.5 cm is the traditional AguaClara design. Time to change this because there could be a significant opportunity to make a more compact sedimentation system if we use a smaller spacing.]:#
 
-The next dimension of the plate settlers we care about is the plate angle. In determining the angle, we want to make sure we have an angle that allows the flocs to slide down the plates. Currently, the AguaClara design sets the angle for the plates at 60 degrees. Given that we could not find any explicit rational for this choice and given that it seems to be working well, we decided to keep the plate angle at 60 degrees.
 
-[Good. I'd add that there isn't a huge advantage to changing this to 50 degrees. ]
+The next dimension of the plate settlers we care about is the plate angle. In determining the angle, we want to make sure we have an angle that allows the flocs to slide down the plates. Currently, the AguaClara design sets the angle for the plates at 60 degrees. Given that we could not find any explicit rational for this choice and given that it seems to be working well, we decided to keep the plate angle at 60 degrees. Furthermore, there is not a huge advantage to changing this design to 50 degrees.
 
-Now that we have the spacing between plates and the angle the plates will be set at, we can calculate what the length of the plate settlers should be using the following equation:
 
 $$L = \frac{S*((v_{up}/v_c)-1)+(T*v_{up})/v_c}{cos(\alpha)sin(\alpha)}$$
 
@@ -303,40 +310,44 @@ theta = 60*u.deg
 major = diam/np.cos(theta)
 focus = np.sqrt((major**2)/4 - (minor**2)/4)
 
-print('The focus ')
+print('The distance from the center of the ellipse to the focus is ' + str(focus))
 ```
 Since 60 degrees was somewhat arbitrarily chosen as a conservative estimate of the angle required to allow flocs to roll down into the jet reverser, we experimented with using a 50 degree angle for the base plates. To compare these two options, we compared the amount of volume we could save by using a 50 degree angle instead of a 60 degree angle.
 
-The volume of space underneath the base plates is considered "wasted" space because the higher the base plates extend, the less available volume there is for the floc blanket to form. We calculated the amount of space "wasted" for base plates at 50 versus 60 degrees creating [OnShape models](https://cad.onshape.com/documents/83807153abc0891a5e2357b6/w/f49e8a4c6a84ac8d0bfbdd69/e/244a70d6ffc2d840528b962e).  
+The volume of space underneath the base plates is considered "wasted" space because the higher the base plates extend, the less available volume there is for the floc blanket to form. We calculated the amount of space "wasted" for base plates at 50 versus 60 degrees by creating [OnShape models](https://cad.onshape.com/documents/83807153abc0891a5e2357b6/w/f49e8a4c6a84ac8d0bfbdd69/e/244a70d6ffc2d840528b962e) of the volume underneath the base plates.
 
-In addition, the OnShape models were also used to calculate the surface area of the base plates:
+These models were created based on the diameter of the Rotoplast (90 in). The design accounted for the 3.5 diameter half-pipe jet reverser that will be placed between the base plates. Thus, 1.75 in (half of the diameter) was removed from the straight edge of each plate.
 
+<p align="center">
+  <img src="https://github.com/cheertsang/Personal/blob/master/cylinder_cut.png?raw=True">
+</p>
+<p align="center">
 
+**Figure 4:** An OnShape model of the volume underneath the base plates.
 
-
-The jet reverser is fabricated from a PVC pipe cut in half sectionally. The diameter of this half-pipe is 7.5 cm ([Weber-Shirk, 2019](https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/Sedimentation.pptx)). The length of the half-pipe is equal to the diameter of the sedimentation tank, 2.286 m.
-
-[Analyze options for 1 to n valleys in the sed tank.]:#
-
-specifications of ellipses
-
-energy dissipation rate for flow leaving jet reverser
-
-The calculations below are adapted from [Sedimentation Design Challenge](https://aguaclara.github.io/Textbook/Sedimentation/Sed_Design_Solution.html):
+Multiplying this volume by 2 allows us to obtain the volume underneath both base plates, which is the volume "wasted" in the sedimentation tank.
 
 ```python
-#Calculate the thickness of the jet when it leaves the diffuser. B_diff = S_diff
+#50 degree
+vol1 = 65929.255*(u.inch**3)
+tot_vol1 = 2*vol1
+print('For 50 degree angled base plates, the total volume wasted is ' + str((tot_vol1).to(u.m**3)))
 
-W_jet_reversed = W_sed * V_sed_up / V_diffuser
+#60 degree
+vol2 = 95819.121751*(u.inch)**3
+tot_vol2 = 2*vol2
+print('For 60 degree angled base plates, the total volume wasted is ' + str((tot_vol2).to(u.m**3)))
 
-#Calculate the maximum energy dissipation rate
+#volume saved
+print('The volume saved by using 50 degree angled base plates is ' + str((tot_vol2-tot_vol1).to(u.m**3)))
 
-EDR_inlet_jet = Pi_jet_plane *((( V_diffuser)**3)
-                        / W_jet_reversed).to(u.mW / u.kg)
-
-
-print('The energy dissipation rate for inlet jet is', EDR_inlet_jet)
 ```
+
+Thus, for 50 degree angled base plates, the total volume wasted is 2.161 cubic meters, and for 60 degree angled base plates, the total volume wasted is 3.14 cubic meters. Since using 50 degree angled based plates saves 0.9796 cubic meters of volume, we thought it would be worth it to use the 50 degree angled base plate design. **Not sure if this is worth it actually**
+
+The jet reverser is fabricated from a PVC pipe cut in half sectionally. According to the OnShape model above, the diameter of this half-pipe is 3.5 in (8.89 cm). The length of the half-pipe is equal to the diameter of the sedimentation tank, 2.286 m.
+
+[Analyze options for 1 to n valleys in the sed tank.]:#
 
 
 ### Design Comparison
