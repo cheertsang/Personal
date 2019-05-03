@@ -45,7 +45,7 @@ Because of this we are looking to build a sedimentation tank out of a pre-made R
 </p>
 <p align="center">
 
-**Figure 3:** The 10,259 liter Rotoplast tank that we will be using as a sedimentation tank has a diameter of 90      
+**Figure 3:** The 10,259 liter Rotoplast tank that we will be using as a sedimentation tank has a diameter of 90 inches.   
 
 ## General Plan/Steps
 
@@ -228,7 +228,7 @@ print ('The total number of diffusers that fit into the sedimentation tank of th
 
 Another big design change we are making is a switch from the standard plate settlers to the honeycomb settlers. Given this major choice, the additional dimensions we must consider are spacing, angle, and length. Based on manufacturing limits of the honeycomb settlers, we already have a predetermined spacing of 3/8". This is determined by the diameter of the holes in the honeycomb.
 
-The next design parameter to consider is the angle of the honeycomb settler. As with plate settlers, we want to make sure we have an angle that allows the flocs to slide down the plates. Current AguaClara plate settlers are designed to sit at 60 degrees. Given that we could not find any explicit rational for this choice and given that it seems to be working well, we decided to use this angle for the honeycomb. Furthermore, as with the plate settlers, there is not a huge advantage in changing this angle to 50 degrees.
+The next design parameter to consider is the angle of the honeycomb settler. As with plate settlers, we want to make sure we have an angle that allows the flocs to slide down the plates. Current AguaClara plate settlers are designed to sit at 60 degrees. Given that we could not find any explicit rationale for this choice and given that it seems to be working well, we decided to use this angle for the honeycomb. Furthermore, as with the plate settlers, there is not a huge advantage in changing this angle to 50 degrees.
 
 Following with AguaClara design choices, we assume an upflow velocity of 1 mm/s and a capture velocity of 0.12 mm/s. Now that we have the spacing between plates and the angle the plates will be set at, we need to calculate the length of the honeycomb settlers. However, this calculation becomes very complicated due to the "lost triangle" issue. In our previously submitted design, we were originally planning to implement plate settlers. However, after some consideration, we decided to implement the honeycomb settlers. Given this new circular architecture, we get a "lost ellipses" which we do not know how to deal with. Before moving forward with the calculation, we want to discuss with Monroe how to deal with this issue.
 
@@ -323,29 +323,45 @@ These models were created based on the diameter of the Rotoplast (90 in). The de
 </p>
 <p align="center">
 
-**Figure 4:** An OnShape model of the volume underneath the base plates.
+**Figure 4:** An OnShape model of the volume underneath the base plates was created for both 50 and 60 degree angled base plates.
 
 Multiplying this volume by 2 allows us to obtain the volume underneath both base plates, which is the volume "wasted" in the sedimentation tank.
 
 ```python
 #50 degree
 vol1 = 65929.255*(u.inch**3)
-tot_vol1 = 2*vol1
-print('For 50 degree angled base plates, the total volume wasted is ' + str((tot_vol1).to(u.m**3)))
+tot_vol1 = (2*vol1).to(u.liters)
+print('For 50 degree angled base plates, the total volume wasted is ' + str(tot_vol1))
 
 #60 degree
 vol2 = 95819.121751*(u.inch)**3
-tot_vol2 = 2*vol2
-print('For 60 degree angled base plates, the total volume wasted is ' + str((tot_vol2).to(u.m**3)))
+tot_vol2 = (2*vol2).to(u.liters)
+print('For 60 degree angled base plates, the total volume wasted is ' + str(tot_vol2))
 
 #volume saved
-print('The volume saved by using 50 degree angled base plates is ' + str((tot_vol2-tot_vol1).to(u.m**3)))
+print('The volume saved by using 50 degree angled base plates is ' + str(tot_vol2-tot_vol1))
+
+#percent of total volume
+percent_vol1 = (tot_vol1/volume)*100
+percent_vol2 = (tot_vol2/volume)*100
+
+print('For 50 degree base plates, the volume underneath the base plates occupies ' + str(percent_vol1) + ' percent of the total tank volume.')
+print('For 60 degree base plates, the volume underneath the base plates occupies ' + str(percent_vol2) + ' percent of the total tank volume.')
+
+#surface area
+#50 deg
+area1 = (4703.578*(u.inch**2)).to(u.m**2)
+print('For 50 degree base plates, the surface area for one plate is ' + str(area1))
+
+#60 deg
+area2 = (6046.805*(u.inch**2)).to(u.m**2)
+print('For 60 degree base plates, the surface area for one plate is ' + str(area2))
 
 ```
 
-Thus, for 50 degree angled base plates, the total volume wasted is 2.161 cubic meters, and for 60 degree angled base plates, the total volume wasted is 3.14 cubic meters. Since using 50 degree angled based plates saves 0.9796 cubic meters of volume, we thought it would be worth it to use the 50 degree angled base plate design. **Not sure if this is worth it actually**
+Thus, for 50 degree angled base plates, the total volume wasted is 2161 liters, and for 60 degree angled base plates, the total volume wasted is 3140 liters. Since using 50 degree angled based plates saves 979.6 liters of volume, we thought it would be worth it to use the 50 degree angled base plate design. However, both designs using a single valley for the bottom of the sedimentation tank waste a lot of space in relation to the total volume of the Rotoplast tank. For 50 degree base plates, the volume underneath the base plates occupies 21.06% of the total tank volume. For 60 degree base plates, the volume underneath the base plates occupies 30.61% of the total tank volume.
 
-The jet reverser is fabricated from a PVC pipe cut in half sectionally. According to the OnShape model above, the diameter of this half-pipe is 3.5 in (8.89 cm). The length of the half-pipe is equal to the diameter of the sedimentation tank, 2.286 m.
+In addition, a single valley design requires a large surface area for the base plates. For 50 degree base plates, the surface area for one plate is 3.035 square meters. For 60 degree base plates, the surface area for one plate is 3.901 square meters. Taking into consideration the feasibility of fabricating base plates this large, we determined that more than one valley would be required for a more practical design.  
 
 [Analyze options for 1 to n valleys in the sed tank.]:#
 
@@ -372,7 +388,8 @@ Evaluation of Most viable Alternatives
 
 ### Analysis
 Explain ALL calculations step by step including why you are doing the calculation.
-### Preliminary Design
+
+### Conclusions
 
 Equations
 Go metric.
