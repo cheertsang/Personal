@@ -220,17 +220,89 @@ length_per_diffuser = spacing_btw_diffusers*2 + exterior_length_diffuser
 num_diffusers = round(diam/length_per_diffuser.to(u.meter))
 print ('The total number of diffusers that fit into the sedimentation tank of this plant is '+str(num_diffusers))
 
-#The next task is to calculate the size of the manifold needed to for the required flow rate. These calculations are yet to be completed and will be done soon.
+```
+
+The dimensions of the inlet manifold are designed so that the manifold velocity is higher than the diffuser velocity, which will allow for more uniform flow out of each diffuser. The calculations were done using an effective sedimentation width, as calculated above, which allowed us to calculate diffuser velocity as if the sed tank had a rectangular cross sectional area.
+
+The volumetric flow out of the diffuser was calculated using conservation of mass:
+
+$$Q_{diff} = \frac{V_{sed}W_{eff}}{B_{diff}}$$
+
+The exit headloss through the inlet diffusers was calculated using the equation for headloss by expansion:
+
+$$h_e = \frac{(V_{in}-V_{out})^2}{2g} $$
+
+The exit headloss was calculated 2 ways: 1) accounting for upflow velocity in sed tanks, and 2) assuming upflow velocity is negligible.
+
+The headloss through the diffusers and the headloss through the effluent launder (assumed to be 4 cm) were then used to calculate the total headloss in the sedimentation tank. This was then used to calculate the ratio of manifold pipe cross-sectional area to total diffuser cross-sectional area, which determines the flow distribution between diffusers. The flow distribution will be more uniform if the diffuser velocity is higher than the manifold velocity. Using this, the diameter for the inlet manifold can be calculated:
+
+The Python calculations below are adapted from the [Sedimentation Design Solution](https://aguaclara.github.io/Textbook/Sedimentation/Sed_Design_Solution.html):
+
+```python
+V_sed_up = 1*u.mm/u.s #upflow velocity in sed tank
+
+#diffuser exit velocity
+flow_max_diffuser = V_sed_up * W_effective_sedtank * exterior_length_diffuser
+
+V_diffuser = (flow_max_diffuser/ (w_diffuser_inside * interior_length_diffuser)).to(u.m / u.s)
+print('The flow of water leaving a sed tank diffuser is',flow_max_diffuser.to(u.ml/u.s))
+print('The velocity of water leaving the sed tank diffuser is',V_diffuser)
+
+#headloss through diffuser
+hl_sed_diffuser_exit1 = (((V_diffuser - V_sed_up) ** 2) / (2*con.GRAVITY)).to(u.cm)
+
+hl_sed_diffuser_exit2 = (((V_diffuser) ** 2) / (2 *con.GRAVITY)).to(u.cm)
+
+hl_sed_diffuser_error=(hl_sed_diffuser_exit2-hl_sed_diffuser_exit1)/hl_sed_diffuser_exit1
+
+print('The best estimate of the exit head loss for the diffuser is', hl_sed_diffuser_exit1)
+print('The 2nd estimate of the exit head loss for the diffuser ignoring the upflow velocity is', hl_sed_diffuser_exit2)
+print('It is reasonable to neglect the effect of the upflow velocity. The error is',hl_sed_diffuser_error)
+
+#max velocity for inlet manifold
+Pi_diffuser_flow = 0.8
+
+def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
+    return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/((Pi_diffuser_flow**2)+1))))
+
+print("Only the diffuser head loss is in the parallel paths.")
+
+V_sed_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, V_diffuser)
+
+print('The maximum velocity in the sedimentation tank manifold is',V_sed_manifold_max)
+
+L_sed_upflow_max = 5.8 * u.m
+
+flow_sed_max = (L_sed_upflow_max * V_sed_up * W_effective_sedtank).to(u.L / u.s)
+print("The maximum flow rate in one sedimentation tank is",flow_sed_max)
+
+#area of manifold to diffuserts
+print('The flow area ratio of manifold pipe to diffusers is',(V_diffuser / V_sed_manifold_max).to(u.dimensionless))
+print("This means that the manifold flow area is larger than the total diffuser area.")
+
+#min inner diameter of manifold pipe
+D_sed_manifold_min= pc.diam_circle(flow_sed_max / V_sed_manifold_max)
+
+SDR=26
+ND_sed_manifold = pipes.ND_SDR_available(D_sed_manifold_min, SDR)
+
+print('The minimum inner diameter of the sedimentation tank manifold is',D_sed_manifold_min.to(u.inch))
+print('The nominal diameter of the sedimentation tank manifold is',ND_sed_manifold)
 
 ```
 
-### Honeycomb Settler Specifications
+**The nominal diameter of the sedimentation tank manifold is 12 inch.**
+
+Using a manifold pipe this large would not be practical; thus, we have determined that multiple valleys and inlet manifolds in the sedimentation tank are required. Our next step is to calculate the inlet manifold diameter for 2 and 3 inlet manifold pipes.
+
+
+### Honeycomb Tube Settler Specifications
 
 Another big design change we are making is a switch from the standard plate settlers to the honeycomb settlers. Given this major choice, the additional dimensions we must consider are spacing, angle, and length. Based on manufacturing limits of the honeycomb settlers, we already have a predetermined spacing of 3/8". This is determined by the diameter of the holes in the honeycomb.
 
-The next design parameter to consider is the angle of the honeycomb settler. As with plate settlers, we want to make sure we have an angle that allows the flocs to slide down the plates. Current AguaClara plate settlers are designed to sit at 60 degrees. Given that we could not find any explicit rationale for this choice and given that it seems to be working well, we decided to use this angle for the honeycomb. Furthermore, as with the plate settlers, there is not a huge advantage in changing this angle to 50 degrees.
+The next design parameter to consider is the angle of the honeycomb settler. As with plate settlers, we want to make sure we have an angle that allows the flocs to slide down the plates. Current AguaClara plate settlers are designed to sit at 60 degrees. Given that we could not find any explicit rational for this choice and given that it seems to be working well, we decided to use this angle for the honeycomb. Furhtermore, as with the plate settlers, there is not a huge advantage in changing this angle to 50 degrees.
 
-Following with AguaClara design choices, we assume an upflow velocity of 1 mm/s and a capture velocity of 0.12 mm/s. Now that we have the spacing between plates and the angle the plates will be set at, we need to calculate the length of the honeycomb settlers. However, this calculation becomes very complicated due to the "lost triangle" issue. In our previously submitted design, we were originally planning to implement plate settlers. However, after some consideration, we decided to implement the honeycomb settlers. Given this new circular architecture, we get a "lost ellipses" which we do not know how to deal with. Before moving forward with the calculation, we want to discuss with Monroe how to deal with this issue.
+Following with AguaClara design choices, we assume an upflow velocity of 1 mm/s and a capture velocity of 0.12 mm/s. Now that we have the spacing between plates and the angle the plates will be set at, we need to calculate the length of the honeycomb settlers. However, this calculation becomes very complicated due to the "lost triangle" issue. In our previously submitted design, we were originally planning to implement plate settlers. However, after some consideration, we decided to implement the honeycomb settlers. Given this new circular architecture, we get a sort of "lost ellipses" which futher complicates the calculation. We know that we can reduce this problem by making a bigger sed tanking and reducing the tube settler spacing, both of which we have done with the honeycomb tube settlers. That being said, we are still not completely sure how to proceed with this calculation. Before moving forward, we want to discuss with Monroe how to deal with this issue.
 
 ### Plate Settler Specifications
 
@@ -296,6 +368,8 @@ This gives us the number of plates per standard module in a standard AguaClara s
 [Our version of plate settlers in your round tank are going to get messy. You will need a support system for each row of plates. UGH. You will need 3 rows of plates. UGH. The width of each plate will be different because of the curved tank. UGH. The width of each plate will vary from bottom to top of the plate. UGH.  ]:#
 
 ### Bottom Geometry and Jet Reverser
+
+#### Single Valley Design
 
 The bottom geometry and jet reverser are based on the current design. The base plates of the sedimentation tank are placed at a 60 degree angle from each other ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)). The dimensions of the base plates are calculated using the equation for an ellipse:
 
@@ -363,40 +437,46 @@ Thus, for 50 degree angled base plates, the total volume wasted is 2161 liters, 
 
 In addition, a single valley design requires a large surface area for the base plates. For 50 degree base plates, the surface area for one plate is 3.035 square meters. For 60 degree base plates, the surface area for one plate is 3.901 square meters. Taking into consideration the feasibility of fabricating base plates this large, we determined that more than one valley would be required for a more practical design.  
 
+#### Multiple Valley Design
+
 [Analyze options for 1 to n valleys in the sed tank.]:#
+We used integration to calculate the volume "wasted" under the scenarios of 2 and 3 valleys. We are having trouble with this.
 
-
-### Design Comparison
-
-#### Amount of Material Required
-
-
-#### Area Occupied by Plant
-
+## Design Comparison
 
 #### Cost Analysis
+In pursuing this new design, our goal is to create a plant that is simpler to construct than the current 1 L/s and gives an increased flow rate (roughly 4 L/s). Given that we are increasing the size of the sedimentation tank to achieve these benefits, we will necessarily incur an increased cost. Therefore, it is important to find what this increase in cost will be and determine whether or not the benefits justify the increase in cost.
 
-Table 1:
+To determine the total cost, we used the price specifications for the 1 L/s plant to determine the cost per part. The prices are summarized in the table below:
 
+**Table 1:** The estimated cost of materials required to build the redesigned 4 L/s plantita.
 
+| Component | Part | Unit Price | Quantity| Component Price|
+| --------- | ---- | ---------- | ------- | -------------- |
+|Rotoplast Tank |2710 Gallon Plastic Water Storage Tank | $1,129.09 |1|$1,129.09|
+|Honeycomb Tube Settlers |Plascore Honeycomb| $300 - 600  |1|$300-600|
+|Bottom Gemoetry (Plates and supports)|PVC Sheet, 48"x48"x1/4"|$87.04 |8|$696.30|
+|Inlet Manifold|PVC Tube 4"x20', RD-17|$61|1|$61|
+|Diffusers| PVC Tube 1"x20', SCH40|$8.95|1|$8.95|
+|Jet Reverser|3"x20', RD-26|$21.15|1|$21.15|
+|Inlet Manifold Cap|4" PVC Cap|$24.40|1|$24.40|
+|Floc Hopper|PVC Transparent Tube sch40 4"x4'|$152.52|1|$152.52|
+| **Total Price**   |   |   |   | **$2,084.15**|
 
-## Proposed Solution Techniques
+Some notes about the above price derivations:
+- We made a conservative estimate in saying that the bottom geometry would require 8 sheets of PVC. This was based on the fact that we needed to roughly span the diameter of the tank (90"). This would mean roughly 4 sheets for the bottom walls, with a conservative estimate of 4 more sheets for the underlying supports.
+- The pricing for the tank came from this link: https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank
+- The floc hopper consists of more than just the transparent tube on the outside. However, given that there would be left over PVC pipe from other parts of the sedimentation tank, we could use those for the other tubing of the floc hopper. Therefore, we say that the remaining cost of the floc hopper is "hidden" within the costs of the other components.
 
-Table Comparing Alternatives
+To get an idea of how cost effective our modified sedimentation tank is, we will use the 1L/s sed tank as a reference point. In total, the tank for the 1L/s costs 38,584 Lempiras, or in USD, \$1,569.27. In terms of cost per liter per second, this is \$1,569.27 per L/s. The total cost of our sedimentation tank is \$2,084.15. Given that our tank will yield roughly 4 L/s, this gives us a cost per liter per second of \$521.04. Assuming the pricing calculations were done correctly, this is roughly 3 times cheaper than the current 1L/s plant! This indicates that pursuing the construction of a slightly larger 4L/s plant would be more economical than relying on 4 1L/s plants working in parallel to achieve the same flow rate.
 
-Evaluation of Most viable Alternatives
+An important thing to note in the above calculations is that neither price analysis includes labor costs. That being said, without having any concrete reference points, it is our guess that our sedimentation tank would be simpler to manufacture and thus result in potentially lower labor costs. After all, increased simplicity is one of our main design goals. Our honeycomb tube settlers, since they are one solid piece, should be easier to install and support. Furthermore, since our tank is one straight, solid piece, the only additional construction requirements are that the top be cut off. Besides that, the remaining components of our sed tank should be roughly equal in complexity when compared to those of the 1 L/s.
 
-### Analysis
-Explain ALL calculations step by step including why you are doing the calculation.
+Given the above factors, it seems like our proposed design is a very feasible approach from an economic standpoint.
 
-### Conclusions
+## Conclusion
 
-Equations
-Go metric.
-
-
-
-The Markdown worksheet should include a method to determine any major design constraints, proposed solution technique(s), analysis, sketches, preliminary design, with extensive documentation. Any equations that you present must be well documented with explanation of how you derived those equations and how you are using those equations.
+The new design of the higher-capacity 4 L/s plantita appears to be more cost-effective than building 4 individual 1 L/s plants. However, the design difficulties and ease of fabrication should be taken into account.
 
 ## References
 
