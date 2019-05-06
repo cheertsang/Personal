@@ -7,22 +7,28 @@
 - Walter Guardado (wg249@cornell.edu)
 
 
-[Wow! This is a very impressive start! You have clearly connected to the motivation that the world needs better sedimentation tanks! And this analysis makes it clear that there are so many opportunities to make improvements. Add your thought process for selecting the tank that you chose. We need prices urgently to help guide this design process. We need to be absolutely sure that it make sense to build larger diameter prefab sed tanks. I suspect this will be economically favorable, but it isn't clear yet! Perhaps include additional reflections on the tradeoffs of having multiple different sizes of sed tanks versus using a modular system where you vary the number of sed tanks depending on demand.]:#
+[Great! Add some more detail on the design and cost comparison with the current PF300. For both designs calculate reasonable design flows assuming 1 mm/s upflow velocity in the floc blanket. Calculate or estimate the available height for the floc blanket assuming that there is 5 cm of clear water below the plate settlers. make sure to have the same capture velocity for the plate or tube settlers to make the comparison fair. Of course, we need to do research to figure out what capture velocity is actually optimal. ]:#
+
+[It seems that you didn't respond to all of my comments. Best practice is to write a comment in response. Otherwise it isn't clear if we are communicating! Maybe I read this too fast. I didn't see how you selected the tank given the many tanks that are available. Explain your algorithm for tank selection.  I'd recommend that you have a conversation with Paul Charles about how you might build the bottom geometry of this tank. I've shared the problem with Paul and so he has been thinking about options. Bottom geometry is fascinating for this scale of a project because although we are designing a smaller scale plant, the width of this tank is much larger than anything that we have ever built. Even Gracias has sed tanks that are only 1.08 m wide!  This means that the solution you develop for this tank might be applicable to retrofits of large rectangular sed tanks too. We've never thought about optimizing the width of the valleys in our sed tanks. Take the valley width to the extremes, identify what fails in both extremes, see if you can identify what might determine the optimal width. Remember that each valley needs a inlet manifold. Consider that we could design a inlet manifold system that starts with a trunk line and that has inlet manifold branches. I'm eager to see where this goes because with a bit of luck we will build this design this summer!]:#
 
 ## Introduction/Background
 
 The capital cost of a traditional AguaClara plant is fixed at roughly \$100,000, plus an additional \$8,000 per L/s of plant capacity ([Weber-Shirk, 2019](https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/AguaClara%20Ecosystem.pptx)). This cost is due to the fact that traditional AguaClara plants are constructed of mostly concrete, which require extensive excavation and on-site construction. The higher the plant capacity, the price per L/s decreases. Thus, traditional AguaClara plants are more cost-efficient for larger communities and often not feasible for serving smaller communities that require flow rates of less than 5 L/s. In order to serve this market of smaller communities, AguaClara designed the PF300, a pre-fabricated 1 L/s plant intended to serve a population of 300 ([Buhl et. al, 2016](https://confluence.cornell.edu/pages/viewpage.action?pageId=333352626&preview=/333352626/335435860/Prefab_Final_Report.pdf)).
 
-AguaClara would like to expand its efforts in serving a range of smaller communities. Thus, we would like to design a range of designs that accommodate for flow rates of 1 to 5 L/s ("plantitas"). In particular, we will be focusing on the design of the sedimentation tank. The current design of the PF300 sedimentation tank consists of two sections of a cylindrical corrugated HDPE pipe welded together at a 30 degree angle (Figure 1):
+AguaClara would like to expand its efforts in serving a range of smaller communities. Thus, we would like to design a range of designs that accommodate for flow rates of 1 to 5 L/s ("plantitas"). In particular, we will be focusing on the design of the sedimentation tank. The current design of the PF300 sedimentation tank consists of two sections of a cylindrical corrugated PVC pipe welded together at a 30 degree angle (Figure 1):
+
+[wait! This isn't HDPE! You can't weld different types of plastic together! This is a critical issue. If we switch from PVC to another material for your new design we need to switch any other components that need to be glued or welded to the tank. ]
 
 <p align="center">
   <img src="https://github.com/cheertsang/Personal/blob/master/IMG_3748.JPG?raw=True" height=500>
 </p>
 <p align="center">
 
-**Figure 1:** The fully fabricated PF300 plant. The sedimentation tank is housed in the teal HDPE corrugated pipe ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)).
+**Figure 1:** The fully fabricated PF300 plant. The sedimentation tank is housed in the teal PVC corrugated pipe ([Herrera et. al, 2016](https://www.overleaf.com/read/cnkbrqcsxxfn)).
 
 Like the traditional AguaClara plants, the internal structure of the sedimentation tank consists of sedimentation plates, a floc hopper, an inlet manifold, outlet manifold, base plates, and a jet reverser (Figure 2).
+
+[I always find it amusing when students write the phrase "traditional AguaClara" :)]
 
 <p align="center">
   <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank_schematic.png?raw=True" height=300>
@@ -34,7 +40,7 @@ Like the traditional AguaClara plants, the internal structure of the sedimentati
 The specifications of the current PF300 plant design within this report were obtained from the [OnShape model](https://cad.onshape.com/documents/c2d1f86405270e814e117305/w/5a99281e258edb48b9d633f5/e/6bae3d77db5722cca1e4684c) created by AIDE Template.
 
 
-In the current PF300 plant design there are two separate pieces of corrugated HDPE pipe that needs to be welded together at a $30\degree$ angle (Figure 2). This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. However, one of the issues with this design is that welding the two sections of corrugated HDPE pipe together is labor-intensive and difficult to line up precisely. We want to explore altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections of pipe. This would allow us to increase the capacity of the PF300 and make it easier to fabricate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
+In the current PF300 plant design there are two separate pieces of corrugated PVC pipe that needs to be welded together at a $30\degree$ angle (Figure 2). This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. In the larger, built in place AguaClara plants, the lost area due to the plate settlers being at this angle must be accounted for in the capture velocity of the plate settlers. However, since the current PF300 design is angled this way, there is no need to account for that. While having the angled design makes the math easier, it brings up some other issues with the design. It is rather labor-intensive and difficult to line up these pieces precisely and weld them together. Our partners in Honduras, Agua Para el Pueblo, has expressed their frustration with the assembly of the PF300. In response to this, we want to explore the option of altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections PVC pipe. This would simplify the assembly of the plant and also allow us to design a plant with a larger flow rate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
 
 [Why did the first version of PF300 have a sloped upper section? ]:#
 
@@ -88,13 +94,34 @@ An important consideration is the ease of use for the plant operator. The new se
 
 A comparison could be made between using the following design options:
   1. Using one larger capacity plantita (new design)
-  2. Using multiple plantitas in conjunction (current design)
+  2. Using multiple plantitas in ~conjunction~ *parallel* (current design)
 
 In order to evaluate which design would be more practical, the following indicators can be analyzed:
   - Amount of material required per liter per second
   - Area occupied by plant per liter per second
   - Difficulty of construction
   - Cost per liter per second
+
+
+## Tank with one valley
+Equation of circle describing our tank:
+$$45^2 = x^2 + y^2$$
+Equation describing the area of the triangle we want to do an infinite sum on:  
+$$A_{triangle} = \frac{tan(\theta)y}{2}$$
+After writing the area of the triangle as a function of x we integrate it:
+$$ V_{wasted} = 2 * \displaystyle\int_{0}^{45} A_{triangle}(x) dx = 72,400 in^3$$
+
+$$ V_{wasted} = 1186 Liters $$
+## Tank with two valley
+
+$$ V_{wasted} = 1440 Liters $$
+
+## Tank with three valleys
+
+$$ V_{wasted} = 967 Liters$$
+
+
+
 
 ## Methods
 
@@ -116,18 +143,19 @@ import matplotlib.pyplot as plt
 
 ```
 
-The new sedimentation tank design will be based on the specifications of a [2710 gallon water storage tank](https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank), which will replace the two sections of corrugated HDPE pipe. The specifications are as follows:
+The new sedimentation tank design will be based on the specifications of a [2710 gallon water storage tank](https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank), which will replace the two sections of corrugated ~~HDPE~~ *PVC* pipe. The specifications are as follows:
 
-- Tank Volume: 2710 gallons (10258.47 liters)
+- Tank Volume: 2500 gallons (9464 liters)
 - Diameter: 90 in (2.286 m)
-- Height: 113 in (2.8702 m)
+- Height: 98 in (2.489 m)
 - Material: Polyethylene
-- Cost: $1,129.09
+- Cost: $1,000
 
 ```python
-volume = (2710*u.gallon).to(u.L)
+volume = (2500*u.gallon).to(u.L)
 diam = (90*u.inch).to(u.m)
-height = (113*u.inch).to(u.m)
+height = (98*u.inch).to(u.m)
+
 ```
 
 ### Plant Capacity
@@ -442,6 +470,8 @@ In addition, a single valley design requires a large surface area for the base p
 [Analyze options for 1 to n valleys in the sed tank.]:#
 We used integration to calculate the volume "wasted" under the scenarios of 2 and 3 valleys. We are having trouble with this.
 
+[Simplify the analysis by thinking about a big flat rectangular tank. The conclusions will be the same as for your small circular tank. Find height of the mountain as a function of valley width. Average height of the space that is lost is equal to half the height of the mountain. That should give you a simple equation for lost height as a function of valley width.]:#
+
 ## Design Comparison
 
 #### Cost Analysis
@@ -470,6 +500,8 @@ Some notes about the above price derivations:
 
 To get an idea of how cost effective our modified sedimentation tank is, we will use the 1L/s sed tank as a reference point. In total, the tank for the 1L/s costs 38,584 Lempiras, or in USD, \$1,569.27. In terms of cost per liter per second, this is \$1,569.27 per L/s. The total cost of our sedimentation tank is \$2,084.15. Given that our tank will yield roughly 4 L/s, this gives us a cost per liter per second of \$521.04. Assuming the pricing calculations were done correctly, this is roughly 3 times cheaper than the current 1L/s plant! This indicates that pursuing the construction of a slightly larger 4L/s plant would be more economical than relying on 4 1L/s plants working in parallel to achieve the same flow rate.
 
+[Good, but I think you missed the cost of several important items. Presumably inlet and outlet manifolds got larger in diameter and required longer pipes, the plate settlers need to be 4 times the area, and the floc hopper is likely much too small. Can you comment on what components resulted in the major cost savings?]
+
 An important thing to note in the above calculations is that neither price analysis includes labor costs. That being said, without having any concrete reference points, it is our guess that our sedimentation tank would be simpler to manufacture and thus result in potentially lower labor costs. After all, increased simplicity is one of our main design goals. Our honeycomb tube settlers, since they are one solid piece, should be easier to install and support. Furthermore, since our tank is one straight, solid piece, the only additional construction requirements are that the top be cut off. Besides that, the remaining components of our sed tank should be roughly equal in complexity when compared to those of the 1 L/s.
 
 Given the above factors, it seems like our proposed design is a very feasible approach from an economic standpoint.
@@ -489,7 +521,8 @@ Weber-Shirk, M., Juan, G., Clare, O., William, P., Leonard, L., Yingda, D., & Zo
 Weber-Shirk, M. (2019, February 7). AguaClara Ecosystem.
 https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/AguaClara%20Ecosystem.pptx.
 
+
 Weber-Shirk, M. (2019, March 12). Sedimentation.
-https://github.com/AguaClara/CEE4540_Master/raw/master/Lectures/In%20Class/Sedimentation.pptx.
+https://github.com/AguaClara/CEE4520/raw/master/Lectures/In%20Class/Sedimentation.pptx.
 
 2710 Gallon Plastic Water Storage Tank. (n.d.). Retrieved April 19, 2019, from https://www.plastic-mart.com/product/8591/2500-gallon-enduraplas-vertical-water-tank.
