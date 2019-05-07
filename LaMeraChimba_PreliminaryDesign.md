@@ -265,7 +265,6 @@ print('The 2nd estimate of the exit head loss for the diffuser ignoring the upfl
 print('It is reasonable to neglect the effect of the upflow velocity. The error is',hl_sed_diffuser_error)
 
 #max velocity for inlet manifold
-Pi_diffuser_flow = 0.8
 
 def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
     return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/((Pi_diffuser_flow**2)+1))))
@@ -276,7 +275,7 @@ V_sed_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, V_diffuser)
 
 print('The maximum velocity in the sedimentation tank manifold is',V_sed_manifold_max)
 
-L_sed_upflow_max = 5.8 * u.m
+L_sed_upflow_max = (160 * u.inch).to(u.m)
 
 flow_sed_max = (L_sed_upflow_max * V_sed_up * W_effective_sedtank).to(u.L / u.s)
 print("The maximum flow rate in one sedimentation tank is",flow_sed_max)
