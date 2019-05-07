@@ -17,8 +17,6 @@ The capital cost of a traditional AguaClara plant is fixed at roughly \$100,000,
 
 AguaClara would like to expand its efforts in serving a range of smaller communities. Thus, we would like to design a range of designs that accommodate for flow rates of 1 to 5 L/s ("plantitas"). In particular, we will be focusing on the design of the sedimentation tank. The current design of the PF300 sedimentation tank consists of two sections of a cylindrical corrugated PVC pipe welded together at a 30 degree angle (Figure 1):
 
-[wait! This isn't HDPE! You can't weld different types of plastic together! This is a critical issue. If we switch from PVC to another material for your new design we need to switch any other components that need to be glued or welded to the tank. ]
-
 <p align="center">
   <img src="https://github.com/cheertsang/Personal/blob/master/IMG_3748.JPG?raw=True" height=500>
 </p>
@@ -101,27 +99,6 @@ In order to evaluate which design would be more practical, the following indicat
   - Area occupied by plant per liter per second
   - Difficulty of construction
   - Cost per liter per second
-
-
-## Tank with one valley
-Equation of circle describing our tank:
-$$45^2 = x^2 + y^2$$
-Equation describing the area of the triangle we want to do an infinite sum on:  
-$$A_{triangle} = \frac{tan(\theta)y}{2}$$
-After writing the area of the triangle as a function of x we integrate it:
-$$ V_{wasted} = 2 * \displaystyle\int_{0}^{45} A_{triangle}(x) dx = 72,400 in^3$$
-
-$$ V_{wasted} = 1186 Liters $$
-## Tank with two valley
-
-$$ V_{wasted} = 1440 Liters $$
-
-## Tank with three valleys
-
-$$ V_{wasted} = 967 Liters$$
-
-
-
 
 ## Methods
 
@@ -294,7 +271,7 @@ def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
     return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/((Pi_diffuser_flow**2)+1))))
 
 print("Only the diffuser head loss is in the parallel paths.")
-
+Pi_sed_manifold_flow = 0.8
 V_sed_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, V_diffuser)
 
 print('The maximum velocity in the sedimentation tank manifold is',V_sed_manifold_max)
@@ -471,6 +448,33 @@ In addition, a single valley design requires a large surface area for the base p
 We used integration to calculate the volume "wasted" under the scenarios of 2 and 3 valleys. We are having trouble with this.
 
 [Simplify the analysis by thinking about a big flat rectangular tank. The conclusions will be the same as for your small circular tank. Find height of the mountain as a function of valley width. Average height of the space that is lost is equal to half the height of the mountain. That should give you a simple equation for lost height as a function of valley width.]:#
+
+## Tank with one valley
+Equation of circle describing our tank:
+$$45^2 = x^2 + y^2$$
+Equation describing the area of the triangle we want to do an infinite sum on:  
+$$A_{triangle} = \frac{tan(\theta)y}{2}$$
+After writing the area of the triangle as a function of x we integrate it:
+$$ V_{wasted} = 2 * \displaystyle\int_{0}^{45} A_{triangle}(x) dx = 72,400 in^3$$
+
+$$ V_{wasted} = 1186 Liters $$
+## Tank with two valley
+
+$$ V_{wasted} = 1440 Liters $$
+
+## Tank with three valleys
+
+$$ V_{wasted} = 967 Liters$$
+
+```python
+#two valleys
+two_val_vol = 1440*u.liters
+percent_wasted2 = two_val_vol/volume*100
+
+#three valleys
+three_val_vol = 967*u.liters
+percent_wasted3 = three_val_vol/volume*100
+```
 
 ## Design Comparison
 
