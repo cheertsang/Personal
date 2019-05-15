@@ -244,6 +244,8 @@ The headloss through the diffusers and the headloss through the effluent launder
 The Python calculations below are adapted from the [Sedimentation Design Solution](https://aguaclara.github.io/Textbook/Sedimentation/Sed_Design_Solution.html):
 
 ```python
+W_effective_sedtank = 1*u.m
+
 V_sed_up = 1*u.mm/u.s #upflow velocity in sed tank
 
 #diffuser exit velocity
@@ -270,6 +272,7 @@ def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
     return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/((Pi_diffuser_flow**2)+1))))
 
 print("Only the diffuser head loss is in the parallel paths.")
+
 Pi_sed_manifold_flow = 0.8
 V_sed_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, V_diffuser)
 
@@ -277,7 +280,7 @@ print('The maximum velocity in the sedimentation tank manifold is',V_sed_manifol
 
 L_sed_upflow_max = (160 * u.inch).to(u.m)
 
-flow_sed_max = (L_sed_upflow_max * V_sed_up * W_effective_sedtank).to(u.L / u.s)
+flow_sed_max = Q
 print("The maximum flow rate in one sedimentation tank is",flow_sed_max)
 
 #area of manifold to diffuserts
