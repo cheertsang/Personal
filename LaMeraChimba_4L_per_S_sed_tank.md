@@ -23,8 +23,6 @@ AguaClara would like to expand its efforts in serving a range of smaller communi
 
 Like the traditional AguaClara plants, the internal structure of the sedimentation tank consists of sedimentation plates, a floc hopper, an inlet manifold, outlet manifold, base plates, and a jet reverser (Figure 2).
 
-[I always find it amusing when students write the phrase "traditional AguaClara" :)]
-
 <p align="center">
   <img src="https://github.com/cheertsang/Personal/blob/master/sed_tank_schematic.png?raw=True" height=300>
 </p>
@@ -35,7 +33,7 @@ Like the traditional AguaClara plants, the internal structure of the sedimentati
 The specifications of the current PF300 plant design within this report were obtained from the [OnShape model](https://cad.onshape.com/documents/c2d1f86405270e814e117305/w/5a99281e258edb48b9d633f5/e/6bae3d77db5722cca1e4684c) created by AIDE Template.
 
 
-In the current PF300 plant design there are two separate pieces of corrugated PVC pipe that needs to be welded together at a $30\degree$ angle (Figure 2). This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. In the larger, built in place AguaClara plants, the lost area due to the plate settlers being at this angle must be accounted for in the capture velocity of the plate settlers. However, since the current PF300 design is angled this way, there is no need to account for that. While having the angled design makes the math easier, it brings up some other issues with the design. It is rather labor-intensive and difficult to line up these pieces precisely and weld them together. Our partners in Honduras, Agua Para el Pueblo, has expressed their frustration with the assembly of the PF300. In response to this, we want to explore the option of altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections PVC pipe. This would simplify the assembly of the plant and also allow us to design a plant with a larger flow rate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
+In the current PF300 plant design, there are two separate pieces of corrugated PVC pipe that needs to be welded together at a $30\degree$ angle (Figure 2). This is done in an effort to maximize the space within the tanks since the plate settlers in the top half of the tank are also set at $30\degree$. In the larger, built-in-place AguaClara plants, the lost area due to the plate settlers being at this angle must be accounted for in the capture velocity of the plate settlers. However, since the current PF300 design is angled this way, there is no need to account for the "lost triangle." While having the angled design makes the math easier, there are other fabrication issues with the design. It is rather labor-intensive and difficult to line up these pieces precisely and weld them together. Our partner in Honduras, Agua Para el Pueblo, has expressed its frustration with the assembly of the PF300. In response to this, we want to explore the option of altering the design of the sedimentation tank to a single larger diameter tank size to avoid the necessity of welding two sections PVC pipe. This would simplify the assembly of the plant and also allow us to design a plant with a larger flow rate. At larger capacities the loss of a smaller percentage of the space due to the angled plate settlers is less of an issue than in the smaller design. In addition we will be addressing the question of whether it is more cost effective to build and operate multiple PF300 plants or have a larger plant, 3-5 L/s, that can be built instead.
 
 Because of this we are looking to build a sedimentation tank out of a pre-made Rotoplast tank (Figure 3).
 
@@ -65,8 +63,6 @@ As we develop the new design, there are important constraints to keep in mind - 
 
   3. **Material/Space** - A slightly more subjective constraint is our use of space. In addition to being cost effective, we want to make sure the plant is space effective. This involves considerations of how much material we are using and what ground surface area the plant is occupying. Part of the application of this constraint would be the subjective evaluation of the space use; that is, intuitively speaking, does the plant seem to warrant the space it is occupying given the benefit it is providing? A more concrete application would be to measure the area occupied by the plant per L/s. This way, we can objectively measure whether or not an increase in space consumed is leading to a proportional increase in capacity.
 
-[Right. Space matters because a building enclosure will be required and because land will need to be purchased.]
-
   4. **Ease of Construction** - One of the main motivations for pursuing a new design was the pursuit of a small plant that is easier to construct. As we develop the design, we want to be sure that we are not adding unnecessary complications. This constraint will be evaluated more intuitively by making comparisons between the construction process for the PF300 and our redesigned version.
 
 ### Trade Offs
@@ -76,8 +72,6 @@ Given that our proposal is an adaptation of a current design, we must think abou
 On the other hand, one benefit of the previous structure was that the plate settlers ran parallel to the upper portion of the tube. This eliminated the little triangle of wasted space by the walls of the tank. With our straight-tank design, we are reintroducing those triangles of space. We must consider the cost of reintroducing this space.
 
 Additionally, we have to consider the fact that placing plate settlers at an angle in an upright tank may be more complicated than placing them parallel to the tank walls. We must analyze whether this potential complexity offsets the added simplicity of a straight tube.
-
-[The wasted triangles go crazy for small sed tanks with long plate settlers. You can reduce the "triangle" problem by making a bigger sed tank AND by using plate settlers or tube settlers that have a reduced spacing. That is why we are purchasing a honeycomb tube settler system with 3/8" tubes.]
 
 ### Operator/User Specifications
 
@@ -108,6 +102,8 @@ import aguaclara.design.human_access as ha
 import aguaclara.core.constants as con
 from aguaclara.core.units import unit_registry as u
 import aguaclara.core.utility as ut
+import numpy as np
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 #import aguaclara.design.sed_tank as st
@@ -265,8 +261,6 @@ $$W_{effective}= \frac{\pi D}{4}$$
 
 Now we can calculate the minimum diffuser width that we can use. That is described by using the following equation:
 $$W_{min}=\frac{V_{sed up}W_{effective}}{V_{diffmin}}$$
-
-
 
 ```python
 max_HL = 1*u.centimeter
@@ -471,46 +465,22 @@ Now we can solve for the maximum velocity in the manifold:
 $$ V_{ManifoldMax}= V_{diffuserMax}\sqrt{2*\frac{1-\Pi_{diffuserflow}^2}{\Pi_{diffuserflow}^2 +1}}$$
 
 ```python
-#for loop
-
 #inputs: jet reverser radius (R_half_pipe), diameter of sed tank (diam), max headloss (max_HL), diffuser diameter (D_diff), upflow velocity (v_sed_up)
 #constants: Pi_diffuser_flow
 
 #find max spacing between diffusers (W)
-w_max = 0.5*R_half_pipe
+#w_max = 0.5*R_half_pipe
 
-#find number of diffusers in one manifold
-n_diffusers = round((diam-2*u.inch)/w_max + 1)
-
-#find max diffuser velocity
-v_diffuser_max = ((2*con.GRAVITY*max_HL)**(0.5)).to(u.m/u.s)
-
-#find total flow rate through diffusers
-Q_diffusers = v_diffuser_max*pc.area_circle(D_diff)*n_diffusers
-
-#find manifold diameter
-Pi_sed_manifold_flow = 0.8
-
-v_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, v_diffuser_max)
-A_manifold = Q_diffusers/v_manifold_max
-d_manifold = np.sqrt((4*A_manifold)/np.pi)
-
-#find width of each channel
-w_channel = Q_diffusers/(v_sed_up*diam)
-
-#find number of channels
-n_channel = diam/w_channel
-
-#find height of the PVC slab for diffuser holes
-h_slab = D_diff*10
-
-#find height from the jet exit to the half pipe
-h_diff_jet = 10*(w_max-D_diff)
+diam = 90
+v_sed_up = 1*(u.mm/u.s)
+def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
+    return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/ ((Pi_diffuser_flow**2)+1))))
 
 
 def sedCalc():
     max_HL = 1*u.centimeter
-    return_dict = {}
+    return_dict ={}
+    max_up = []
     Diameter_half_pipe = [3,3.5,4.5,5,5.5,6]
     for rad in Diameter_half_pipe:
         rad_units = rad*u.inch
@@ -519,7 +489,8 @@ def sedCalc():
             L2_units = L2*u.inch
             L2_dict = {}
             upper = (rad_units - .1*L2_units).to(u.mm)
-            for diam_d in range(3, max(3, upper)):
+            max_up.append(int(upper.magnitude))
+            for diam_d in range(3, max(3, int(upper.magnitude))):
                 diam_dict = {}
                 diam_units = diam_d*u.mm
 ###############################################################################
@@ -531,16 +502,17 @@ def sedCalc():
                 v_manifold_max = Vel_sed_manifold_max(Pi_sed_manifold_flow, v_diffuser_max)
                 A_manifold = Q_diffusers/v_manifold_max
                 d_manifold = np.sqrt((4*A_manifold)/np.pi)
-                w_channel = Q_diffusers/(v_sed_up*diam)
+                w_channel = (Q_diffusers/(v_sed_up*diam*u.inch)).to(u.meter)
+                # print(w_channel)
 
                 #find number of channels
-                n_channel = diam/w_channel
+                n_channel = np.floor((diam*u.inch).to(u.meter)/w_channel)
 
                 #find height of the PVC slab for diffuser holes
-                h_slab = D_diff*10
+                h_slab = diam_units*10#D_diff*10
 
                 #find height from the jet exit to the half pipe
-                h_diff_jet = 10*(w_max-D_diff)
+                h_diff_jet = 10*(w_max-diam_units)#D_diff)
 ###############################################################################
                 diff_flow=Q_diffusers
                 manifold_diam = d_manifold
@@ -548,17 +520,18 @@ def sedCalc():
                 num_channels = n_channel
                 slab_height = h_slab
                 height = h_diff_jet
-                diam_dict['diffuser flow'] = diff_flow
-                diam_dict['manifold diameter'] = manifold_diam
-                diam_dict['# of channels'] = num_channels
-                diam_dict['bottom height'] = height
-                diam_dict['slab height'] = slab_height
+                diam_dict['diffuser flow'] = str(diff_flow)
+                diam_dict['manifold diameter'] = str(manifold_diam)
+                diam_dict['# of channels'] = num_channels.magnitude
+                diam_dict['bottom height'] = str(height)
+                diam_dict['slab height'] = str(slab_height)
                 key = 'diffuser diameter: ' + str(diam_d)
                 L2_dict[key] = diam_dict
             key = 'L2 height: ' + str(L2)
             rad_dict[key] = L2_dict
         key = 'jet reverser radius: ' + str(rad)
         return_dict[key] = rad_dict
+    print(max(max_up))
     return return_dict
 sedCalc()
 ```
