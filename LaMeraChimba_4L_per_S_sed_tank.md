@@ -503,11 +503,15 @@ def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
 
 
 def sedCalc():
+    def Vel_sed_manifold_max(Pi_diffuser_flow, V_diffuser):
+        return (V_diffuser * np.sqrt(2 * ((1-(Pi_diffuser_flow**2))/ ((Pi_diffuser_flow**2)+1))))
+    diam = 90
+    v_sed_up = 1*(u.mm/u.s)
     max_HL = 1*u.centimeter
     return_dict ={}
     Diameter_half_pipe = [3,3.5,4,4.5,5,6]
-    for diam in Diameter_half_pipe:
-        rad_units = (diam/2)*u.inch
+    for diam_half_pipe in Diameter_half_pipe:
+        rad_units = (diam_half_pipe/2)*u.inch
         rad_dict = {}
         for L2 in range (1,7):#9):
             L2_units = L2*u.inch
@@ -522,7 +526,7 @@ def sedCalc():
                 diam_units = diam_d*u.mm
     ###############################################################################
                 w_max1 = rad_units#R_half_pipe
-                w_max2 = diam_units+L2_units/10
+                w_max2 = (diam_units+(L2_units/10)).to(u.inch)
                 w_max = min(w_max1, w_max2)
 
                 n_diffusers = round(((diam*u.inch)-2*u.inch)/w_max + 1)
@@ -555,7 +559,7 @@ def sedCalc():
                 diam_dict['# of channels'] = num_channels.magnitude
                 diam_dict['bottom height'] = str(height)
                 diam_dict['slab height'] = str(slab_height)
-                diam_dict['diffuser spacing'] = str(w_max)
+                diam_dict['diffuser spacing'] = str(w_max.to(u.mm))
                 diam_dict['# of diffusers'] = str(n_diffusers)
                     #diam_dict['L2 height'] = str(L2_units)
                     #diam_dict['L2'] = str(L2_uni)
@@ -565,7 +569,7 @@ def sedCalc():
 
                 L2_dict[key] = diam_dict
 
-            name = 'diam_'+str(rad)+'L2_' + str(L2) + '.csv'
+            name = 'diam_'+str(diam_half_pipe)+'L2_' + str(L2) + '.csv'
             f = open(name, 'w')
             for line in csv_lines:
                 f.write(line)
@@ -575,7 +579,7 @@ def sedCalc():
 
             key = 'L2 height: ' + str(L2)
             rad_dict[key] = L2_dict
-        key = 'jet reverser radius: ' + str(rad)
+        key = 'jet reverser radius: ' + str(rad_units)
         return_dict[key] = rad_dict
     return return_dict
 sedCalc()
